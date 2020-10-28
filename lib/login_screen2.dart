@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import './database_helper.dart';
 
 class LoginScreen2 extends StatelessWidget {
   final Color backgroundColor1;
@@ -8,7 +10,13 @@ class LoginScreen2 extends StatelessWidget {
   final AssetImage logo;
   final BuildContext context;
 
+  void insertIntoDatabase() {
+    int teste = DatabaseHelper.instance.insert("Jaian", "Jaian");
+    print("Teste: " + teste.toString());
+  }
+
   void logIntoApp() {
+    insertIntoDatabase();
     Navigator.of(context)
         .pushNamed('/welcome', arguments: {'name': "Jaian Sousa"});
   }
