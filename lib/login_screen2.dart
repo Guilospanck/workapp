@@ -12,6 +12,14 @@ class LoginScreen2 extends StatelessWidget {
 
   final _name = TextEditingController();
   final _pass = TextEditingController();
+  final _textToLogo = TextEditingController();
+
+  void setTextToLogo(value) {
+    if (value.length != 0)
+      _textToLogo.text = value[0].toUpperCase();
+    else
+      _textToLogo.text = "";
+  }
 
   void insertIntoDatabase() {
     // DatabaseHelper.instance.queryDatabase().then((res) => res).then((res) => {
@@ -82,13 +90,14 @@ class LoginScreen2 extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       foregroundColor: this.foregroundColor,
                       radius: 100.0,
-                      child: new Text(
-                        "J",
-                        // _name.text.length != 0 ? _name.text[0] : "",
+                      child: new TextFormField(
+                        controller: _textToLogo,
+                        decoration: new InputDecoration.collapsed(hintText: ''),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 50.0,
-                          fontWeight: FontWeight.w100,
-                        ),
+                            fontSize: 50.0,
+                            fontWeight: FontWeight.w100,
+                            color: this.foregroundColor),
                       ),
                     ),
                     decoration: BoxDecoration(
@@ -141,6 +150,7 @@ class LoginScreen2 extends StatelessWidget {
                 new Expanded(
                   child: TextFormField(
                     controller: _name,
+                    onChanged: (value) => setTextToLogo(value),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: this.foregroundColor),
                     decoration: InputDecoration(
