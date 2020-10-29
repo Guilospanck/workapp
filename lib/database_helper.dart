@@ -58,8 +58,26 @@ class DatabaseHelper {
     // INSERT INTO ${DatabaseHelper.table}(${DatabaseHelper.columnName}, ${DatabaseHelper.columnPass})
     // VALUES(?, ?)
     // ''', [name, pass]);
-
+    print(await db.query(DatabaseHelper.table));
     return insertCount;
+  }
+
+  queryDatabase() async {
+    Database db = await DatabaseHelper.instance.database;
+    return (await db.query(DatabaseHelper.table));
+  }
+
+  verifyUserCredentials(String user, String pass) async {
+    Database db = await DatabaseHelper.instance.database;
+    var count = await db.query(DatabaseHelper.table,
+        where: 'name = ? AND pass = ?', whereArgs: [user, pass]);
+
+    return count;
+  }
+
+  deleteEverything() async {
+    Database db = await DatabaseHelper.instance.database;
+    await db.rawDelete('DELETE FROM ${DatabaseHelper.table}');
   }
 
   update(int idToUpdate, String newUser, String newPass) async {

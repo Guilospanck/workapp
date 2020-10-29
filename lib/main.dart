@@ -284,22 +284,16 @@ class _WelcomeFormState extends State<WelcomeForm> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),
-          child: TextFormField(
-              // controller: _name,
-              initialValue: args['name'].toString(),
-              decoration: const InputDecoration(
-                icon: Icon(Icons.person),
-                hintText: 'Qual seu nome?',
-                labelText: 'Nome',
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Informe seu nome!';
-                }
-                return null;
-              }),
-        ),
+            padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),
+            child: TextFormField(
+                readOnly: true,
+                // controller: _name,
+                initialValue: args['name'].toString(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Qual seu nome?',
+                  labelText: 'Nome',
+                ))),
         Padding(
           padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),
           child: DropdownButtonFormField(
@@ -308,7 +302,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
               hintText: 'Você está trabalhando hoje?',
               labelText: 'Trabalhando hoje? *',
             ),
-            value: _selectedOption,
+            value: _selectedOption != null ? _selectedOption : _options[0],
             validator: (String value) {
               if (value?.isEmpty ?? true) {
                 return 'Informe se está ou não trabalhando hoje!';
@@ -389,18 +383,14 @@ class _WelcomeFormState extends State<WelcomeForm> {
         Padding(
           padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),
           child: TextFormField(
-              controller: _name,
+              // controller: _name,
+              readOnly: true,
+              initialValue: args['name'].toString(),
               decoration: const InputDecoration(
                 icon: Icon(Icons.person),
                 hintText: 'Qual seu nome?',
-                labelText: 'Nome *',
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Informe seu nome!';
-                }
-                return null;
-              }),
+                labelText: 'Nome',
+              )),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),

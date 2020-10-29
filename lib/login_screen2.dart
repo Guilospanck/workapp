@@ -7,18 +7,41 @@ class LoginScreen2 extends StatelessWidget {
   final Color backgroundColor2;
   final Color highlightColor;
   final Color foregroundColor;
-  final AssetImage logo;
+  final AssetImage logo = AssetImage('img/full-bloom.png');
   final BuildContext context;
 
+  final _name = TextEditingController();
+  final _pass = TextEditingController();
+
   void insertIntoDatabase() {
-    int teste = DatabaseHelper.instance.insert("Jaian", "Jaian");
-    print("Teste: " + teste.toString());
+    // DatabaseHelper.instance.queryDatabase().then((res) => res).then((res) => {
+    //       DatabaseHelper.instance
+    //           .deleteEverything()
+    //           .then((res) => res)
+    //           .then((res) => {DatabaseHelper.instance.queryDatabase()})
+    //     });
+    DatabaseHelper.instance
+        .insert(_name.text, _pass.text)
+        .then((res) => {print("Teste: " + res.toString())});
+  }
+
+  dynamic verifyUserCredentials() {
+    return DatabaseHelper.instance
+        .verifyUserCredentials(_name.text, _pass.text);
+  }
+
+  void validateUserCredentialsResponse(var response) {
+    if (response.length != 0) {
+      Navigator.of(context)
+          .pushNamed('/welcome', arguments: {'name': _name.text});
+    } else {
+      print("Not allowed.");
+    }
   }
 
   void logIntoApp() {
-    insertIntoDatabase();
-    Navigator.of(context)
-        .pushNamed('/welcome', arguments: {'name': "Jaian Sousa"});
+    // insertIntoDatabase();
+    verifyUserCredentials().then((res) => validateUserCredentialsResponse(res));
   }
 
   LoginScreen2(
@@ -27,8 +50,7 @@ class LoginScreen2 extends StatelessWidget {
       this.backgroundColor2,
       this.highlightColor,
       this.foregroundColor,
-      this.context,
-      this.logo});
+      this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +96,14 @@ class LoginScreen2 extends StatelessWidget {
                         width: 1.0,
                       ),
                       shape: BoxShape.circle,
-                      //image: DecorationImage(image: this.logo)
+                      // image: DecorationImage(image: this.logo)
                     ),
                   ),
                   new Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: new Text(
-                      "Jaian Sousa",
+                    child: new TextFormField(
+                      controller: _name,
+                      textAlign: TextAlign.center,
                       style: TextStyle(color: this.foregroundColor),
                     ),
                   )
@@ -109,16 +132,18 @@ class LoginScreen2 extends StatelessWidget {
                   padding:
                       EdgeInsets.only(top: 10.0, bottom: 10.0, right: 00.0),
                   child: Icon(
-                    Icons.alternate_email,
+                    Icons.person,
                     color: this.foregroundColor,
                   ),
                 ),
                 new Expanded(
-                  child: TextField(
+                  child: TextFormField(
+                    controller: _name,
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: this.foregroundColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'jaiansousa@flutter.com',
+                      // hintText: 'jaiansousa@flutter.com',
                       hintStyle: TextStyle(color: this.foregroundColor),
                     ),
                   ),
@@ -152,7 +177,8 @@ class LoginScreen2 extends StatelessWidget {
                   ),
                 ),
                 new Expanded(
-                  child: TextField(
+                  child: TextFormField(
+                    controller: _pass,
                     obscureText: true,
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
@@ -176,7 +202,7 @@ class LoginScreen2 extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 20.0, horizontal: 20.0),
                     color: this.highlightColor,
-                    onPressed: () => {logIntoApp()},
+                    onPressed: () => logIntoApp(),
                     child: Text(
                       "Entrar",
                       style: TextStyle(color: this.foregroundColor),
