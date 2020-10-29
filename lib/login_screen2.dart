@@ -105,6 +105,12 @@ class LoginScreen2 extends StatelessWidget {
                       controller: _name,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: this.foregroundColor),
+                      decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none),
                     ),
                   )
                 ],
