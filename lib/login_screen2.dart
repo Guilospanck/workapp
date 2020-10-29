@@ -84,6 +84,7 @@ class LoginScreen2 extends StatelessWidget {
                       radius: 100.0,
                       child: new Text(
                         "J",
+                        // _name.text.length != 0 ? _name.text[0] : "",
                         style: TextStyle(
                           fontSize: 50.0,
                           fontWeight: FontWeight.w100,
@@ -105,12 +106,7 @@ class LoginScreen2 extends StatelessWidget {
                       controller: _name,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: this.foregroundColor),
-                      decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none),
+                      decoration: new InputDecoration.collapsed(hintText: ''),
                     ),
                   )
                 ],
