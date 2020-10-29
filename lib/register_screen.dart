@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import './database_helper.dart';
 
-class LoginScreen2 extends StatelessWidget {
+class RegisterScreenComponent extends StatelessWidget {
   final Color backgroundColor1;
   final Color backgroundColor2;
   final Color highlightColor;
@@ -22,40 +22,16 @@ class LoginScreen2 extends StatelessWidget {
   }
 
   void insertIntoDatabase() {
-    // DatabaseHelper.instance.queryDatabase().then((res) => res).then((res) => {
-    //       DatabaseHelper.instance
-    //           .deleteEverything()
-    //           .then((res) => res)
-    //           .then((res) => {DatabaseHelper.instance.queryDatabase()})
-    //     });
     DatabaseHelper.instance
         .insert(_name.text, _pass.text)
-        .then((res) => {print("Teste: " + res.toString())});
-  }
-
-  dynamic verifyUserCredentials() {
-    return DatabaseHelper.instance
-        .verifyUserCredentials(_name.text, _pass.text);
-  }
-
-  void validateUserCredentialsResponse(var response) {
-    if (response.length != 0) {
-      Navigator.of(context)
-          .pushNamed('/welcome', arguments: {'name': _name.text});
-    } else {
-      print("Not allowed.");
-    }
+        .then((res) => {Navigator.of(context).pushNamed('/')});
   }
 
   void logIntoApp() {
-    verifyUserCredentials().then((res) => validateUserCredentialsResponse(res));
+    insertIntoDatabase();
   }
 
-  void openRegisterScreen() {
-    Navigator.of(context).pushNamed('/register');
-  }
-
-  LoginScreen2(
+  RegisterScreenComponent(
       {Key k,
       this.backgroundColor1,
       this.backgroundColor2,
@@ -219,7 +195,7 @@ class LoginScreen2 extends StatelessWidget {
                     color: this.highlightColor,
                     onPressed: () => logIntoApp(),
                     child: Text(
-                      "Entrar",
+                      "Criar",
                       style: TextStyle(color: this.foregroundColor),
                     ),
                   ),
@@ -252,29 +228,29 @@ class LoginScreen2 extends StatelessWidget {
           // new Expanded(
           //   child: Divider(),
           // ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(
-                left: 40.0, right: 40.0, top: 10.0, bottom: 20.0),
-            alignment: Alignment.center,
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  child: new FlatButton(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 20.0),
-                    color: Colors.transparent,
-                    onPressed: () => {openRegisterScreen()},
-                    child: Text(
-                      "Não tem uma conta? Crie uma.",
-                      style: TextStyle(
-                          color: this.foregroundColor.withOpacity(0.5)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // new Container(
+          //   width: MediaQuery.of(context).size.width,
+          //   margin: const EdgeInsets.only(
+          //       left: 40.0, right: 40.0, top: 10.0, bottom: 20.0),
+          //   alignment: Alignment.center,
+          //   child: new Row(
+          //     children: <Widget>[
+          //       new Expanded(
+          //         child: new FlatButton(
+          //           padding: const EdgeInsets.symmetric(
+          //               vertical: 20.0, horizontal: 20.0),
+          //           color: Colors.transparent,
+          //           onPressed: () => {openRegisterScreen()},
+          //           child: Text(
+          //             "Não tem uma conta? Crie uma.",
+          //             style: TextStyle(
+          //                 color: this.foregroundColor.withOpacity(0.5)),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
