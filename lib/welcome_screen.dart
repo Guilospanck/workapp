@@ -206,8 +206,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Padding(
-                  padding:
-                      EdgeInsets.only(top: 10.0, bottom: 10.0, right: 00.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: Icon(
                     Icons.person,
                     color: this.foregroundColor,
@@ -220,8 +219,13 @@ class _WelcomeFormState extends State<WelcomeForm> {
                     textAlign: TextAlign.center,
                     style: TextStyle(color: this.foregroundColor),
                     decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      // contentPadding:
+                      //     EdgeInsets.only(left: 15.0, top: 10.0, bottom: 10.0),
                       border: InputBorder.none,
-                      // hintText: 'jaiansousa@flutter.com',
+                      labelText: 'Nome',
+                      labelStyle: TextStyle(color: Colors.white),
                       hintStyle: TextStyle(color: this.foregroundColor),
                     ),
                   ),
@@ -231,7 +235,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
           ),
           new Container(
             width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border(
@@ -247,17 +251,23 @@ class _WelcomeFormState extends State<WelcomeForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 0.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: Icon(
                     Icons.work,
                     color: this.foregroundColor,
                   ),
                 ),
                 new Expanded(
+                    child: new Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: this.highlightColor,
+                  ),
                   child: DropdownButtonFormField(
                     isExpanded: true,
                     style: TextStyle(color: this.foregroundColor),
                     decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: 15.0, top: 10.0, bottom: 10.0),
                         hintText: 'Você está trabalhando hoje?',
                         hintStyle: TextStyle(color: Colors.white),
                         labelText: 'Trabalhando hoje? *',
@@ -277,8 +287,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
                                 alignment: Alignment.center,
                                 child: new Text(
                                   option,
-                                  style:
-                                      TextStyle(backgroundColor: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
                               value: option,
@@ -287,7 +296,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
                     onChanged: (newValue) =>
                         setState(() => _selectedOption = newValue),
                   ),
-                ),
+                )),
               ],
             ),
           ),
@@ -309,72 +318,41 @@ class _WelcomeFormState extends State<WelcomeForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 0.0),
-                  child: Icon(
-                    Icons.date_range,
-                    color: this.foregroundColor,
-                  ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    child: Text("Selecione uma data"),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      DatePicker.showDatePicker(context,
-                          showTitleActions: true,
-                          minTime: DateTime(2018, 1, 1),
-                          maxTime: DateTime(2118, 1, 1), onChanged: (date) {
-                        _setDate(date);
-                        _setVisibilityOfDateTextField(true);
-                      }, onConfirm: (date) {
-                        _setDate(date);
-                        _setVisibilityOfDateTextField(true);
-                      }, currentTime: DateTime.now(), locale: LocaleType.pt);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: this.foregroundColor,
-                    width: 0.5,
-                    style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                visibilityOfDateText
-                    ? Expanded(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 20.0),
-                          child: TextFormField(
-                              controller: _dateEditing,
-                              enabled: true,
-                              decoration: const InputDecoration(
-                                icon: Icon(Icons.date_range),
-                                hintText: 'Formato: xx/xx/xxxx',
-                                labelText: 'Data que deseja saber *',
-                              ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Selecione a data no botão acima ou informe com xx/xx/xxxx';
-                                }
-                                return null;
-                              }),
-                        ),
-                      )
-                    : new Container(),
+                    padding:
+                        EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
+                    child: Icon(Icons.date_range, color: this.foregroundColor)),
+                new Expanded(
+                    child: FlatButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(2018, 1, 1),
+                        maxTime: DateTime(2118, 1, 1), onChanged: (date) {
+                      _setDate(date);
+                      _setVisibilityOfDateTextField(true);
+                    }, onConfirm: (date) {
+                      _setDate(date);
+                      _setVisibilityOfDateTextField(true);
+                    }, currentTime: DateTime.now(), locale: LocaleType.pt);
+                  },
+                  child: TextFormField(
+                      controller: _dateEditing,
+                      readOnly: true,
+                      enabled: false,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          hintText: 'Formato: xx/xx/xxxx',
+                          labelText: 'Data que deseja saber *',
+                          border: InputBorder.none),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Selecione a data no botão acima ou informe com xx/xx/xxxx';
+                        }
+                        return null;
+                      }),
+                )),
               ],
             ),
           ),
