@@ -45,28 +45,6 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  LoginForm({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _LoginFormState createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: LoginScreen2(
-          backgroundColor1: Color(0xFF444152),
-          backgroundColor2: Color(0xFF6f6c7d),
-          highlightColor: Color(0xfff65aa3),
-          foregroundColor: Colors.white,
-          context: context),
-    );
-  }
-}
-
 // ------------------ Register Screen -------------------
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key key, this.title}) : super(key: key);

@@ -105,6 +105,8 @@ class _WelcomeFormState extends State<WelcomeForm> {
       var dayHeWantsToKnow = whatDayHeWants;
       var isHeWorkingToday = _selectedOption;
 
+      if (isHeWorkingToday == null) isHeWorkingToday = "Sim";
+
       var whatTeamIsHe = _verifyWhichTeamIsHe(today, isHeWorkingToday);
 
       var difference = _getDifferenceOfDatesInDays(dayHeWantsToKnow);
@@ -389,9 +391,12 @@ class _WelcomeFormState extends State<WelcomeForm> {
                             vertical: 20.0, horizontal: 20.0),
                         color: this.highlightColor,
                         onPressed: () {
-                          if (showSnackbar)
+                          if (showSnackbar || _dateEditing.text.length == 0) {
                             Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('Preencha todos os campos.')));
+                              content: Text('Preencha todos os campos.'),
+                              duration: Duration(seconds: 2),
+                            ));
+                          }
                           _verifyIfHeIsGoingToWork();
                         },
                         child: Text(
