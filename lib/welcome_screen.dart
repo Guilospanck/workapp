@@ -17,8 +17,8 @@ class _WelcomeFormState extends State<WelcomeForm> {
 
   final _name = TextEditingController();
   final _dateEditing = TextEditingController();
-  // Note: This is a GlobalKey<FormState>, not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
+
+  bool showSnackbar = false;
 
   List<String> _options = ["Sim", "Não"];
   String _selectedOption;
@@ -96,27 +96,37 @@ class _WelcomeFormState extends State<WelcomeForm> {
   }
 
   void _verifyIfHeIsGoingToWork() {
-    var today = DateTime.now();
-    var dayHeWantsToKnow = whatDayHeWants;
-    var isHeWorkingToday = _selectedOption;
+    if (_dateEditing.text.length != 0) {
+      setState(() {
+        showSnackbar = false;
+      });
 
-    var whatTeamIsHe = _verifyWhichTeamIsHe(today, isHeWorkingToday);
+      var today = DateTime.now();
+      var dayHeWantsToKnow = whatDayHeWants;
+      var isHeWorkingToday = _selectedOption;
 
-    var difference = _getDifferenceOfDatesInDays(dayHeWantsToKnow);
-    var teamOfTheDay = _verifyWhichTeamIsByDifference(difference);
+      var whatTeamIsHe = _verifyWhichTeamIsHe(today, isHeWorkingToday);
 
-    var response = "";
-    bool yesOrNo = false;
-    if (teamOfTheDay == whatTeamIsHe) {
-      response =
-          _formatResponseToShowInResultScreen(dayHeWantsToKnow, today, "");
-      yesOrNo = true;
+      var difference = _getDifferenceOfDatesInDays(dayHeWantsToKnow);
+      var teamOfTheDay = _verifyWhichTeamIsByDifference(difference);
+
+      var response = "";
+      bool yesOrNo = false;
+      if (teamOfTheDay == whatTeamIsHe) {
+        response =
+            _formatResponseToShowInResultScreen(dayHeWantsToKnow, today, "");
+        yesOrNo = true;
+      } else {
+        response = _formatResponseToShowInResultScreen(
+            dayHeWantsToKnow, today, "não ");
+        yesOrNo = false;
+      }
+      _showResultScreen(response, yesOrNo);
     } else {
-      response =
-          _formatResponseToShowInResultScreen(dayHeWantsToKnow, today, "não ");
-      yesOrNo = false;
+      setState(() {
+        showSnackbar = true;
+      });
     }
-    _showResultScreen(response, yesOrNo);
   }
 
   void _showResultScreen(String result, bool willWork) {
@@ -128,311 +138,322 @@ class _WelcomeFormState extends State<WelcomeForm> {
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
 
-    return Container(
-      decoration: new BoxDecoration(
-        gradient: new LinearGradient(
-          begin: Alignment.centerLeft,
-          end: new Alignment(
-              1.0, 0.0), // 10% of the width, so there are ten blinds.
-          colors: [
-            this.backgroundColor1,
-            this.backgroundColor2
-          ], // whitish to gray
-          tileMode: TileMode.repeated, // repeats the gradient over the canvas
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Work App'),
+          backgroundColor: this.backgroundColor1,
         ),
-      ),
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(top: 150.0, bottom: 50.0),
-            child: Center(
-              child: new Column(
-                children: <Widget>[
-                  Container(
-                    height: 128.0,
-                    width: 128.0,
-                    // child: new CircleAvatar(
-                    //   backgroundColor: Colors.transparent,
-                    //   foregroundColor: this.foregroundColor,
-                    //   radius: 100.0,
-                    //   child: new TextFormField(
-                    //     controller: _textToLogo,
-                    //     decoration: new InputDecoration.collapsed(hintText: ''),
-                    //     textAlign: TextAlign.center,
-                    //     style: TextStyle(
-                    //         fontSize: 50.0,
-                    //         fontWeight: FontWeight.w100,
-                    //         color: this.foregroundColor),
-                    //   ),
-                    // ),
-                    // decoration: BoxDecoration(
-                    //   border: Border.all(
-                    //     color: this.foregroundColor,
-                    //     width: 1.0,
-                    //   ),
-                    //   shape: BoxShape.circle,
-                    //   // image: DecorationImage(image: this.logo)
-                    // ),
+        body: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              begin: Alignment.centerLeft,
+              end: new Alignment(
+                  1.0, 0.0), // 10% of the width, so there are ten blinds.
+              colors: [
+                this.backgroundColor1,
+                this.backgroundColor2
+              ], // whitish to gray
+              tileMode:
+                  TileMode.repeated, // repeats the gradient over the canvas
+            ),
+          ),
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+                child: Center(
+                  child: new Column(
+                    children: <Widget>[
+                      Container(
+                        height: 128.0,
+                        width: 128.0,
+                        child: new CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: this.foregroundColor,
+                          radius: 100.0,
+                          child: new TextFormField(
+                            initialValue:
+                                args['name'][0].toString().toUpperCase(),
+                            decoration:
+                                new InputDecoration.collapsed(hintText: ''),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 50.0,
+                                fontWeight: FontWeight.w100,
+                                color: this.foregroundColor),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: this.foregroundColor,
+                            width: 1.0,
+                          ),
+                          shape: BoxShape.circle,
+                          // image: DecorationImage(image: this.logo)
+                        ),
+                      ),
+                      new Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: new TextFormField(
+                          controller: _name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: this.foregroundColor),
+                          decoration:
+                              new InputDecoration.collapsed(hintText: ''),
+                        ),
+                      )
+                    ],
                   ),
-                  new Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: new TextFormField(
-                      controller: _name,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: this.foregroundColor),
-                      decoration: new InputDecoration.collapsed(hintText: ''),
+                ),
+              ),
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: this.foregroundColor,
+                        width: 0.5,
+                        style: BorderStyle.solid),
+                  ),
+                ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Icon(
+                        Icons.person,
+                        color: this.foregroundColor,
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: this.foregroundColor,
-                    width: 0.5,
-                    style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Icon(
-                    Icons.person,
-                    color: this.foregroundColor,
-                  ),
-                ),
-                new Expanded(
-                  child: TextFormField(
-                    readOnly: true,
-                    initialValue: args['name'].toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: this.foregroundColor),
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      // contentPadding:
-                      //     EdgeInsets.only(left: 15.0, top: 10.0, bottom: 10.0),
-                      border: InputBorder.none,
-                      labelText: 'Nome',
-                      labelStyle: TextStyle(color: Colors.white),
-                      hintStyle: TextStyle(color: this.foregroundColor),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: this.foregroundColor,
-                    width: 0.5,
-                    style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Icon(
-                    Icons.work,
-                    color: this.foregroundColor,
-                  ),
-                ),
-                new Expanded(
-                    child: new Theme(
-                  data: Theme.of(context).copyWith(
-                    canvasColor: this.highlightColor,
-                  ),
-                  child: DropdownButtonFormField(
-                    isExpanded: true,
-                    style: TextStyle(color: this.foregroundColor),
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: 15.0, top: 10.0, bottom: 10.0),
-                        hintText: 'Você está trabalhando hoje?',
-                        hintStyle: TextStyle(color: Colors.white),
-                        labelText: 'Trabalhando hoje? *',
-                        labelStyle: TextStyle(color: Colors.white),
-                        border: InputBorder.none),
-                    value:
-                        _selectedOption != null ? _selectedOption : _options[0],
-                    validator: (String value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Informe se está ou não trabalhando hoje!';
-                      }
-                      return null;
-                    },
-                    items: _options
-                        .map((option) => DropdownMenuItem(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: new Text(
-                                  option,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              value: option,
-                            ))
-                        .toList(),
-                    onChanged: (newValue) =>
-                        setState(() => _selectedOption = newValue),
-                  ),
-                )),
-              ],
-            ),
-          ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: this.foregroundColor,
-                    width: 0.5,
-                    style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                    padding:
-                        EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
-                    child: Icon(Icons.date_range, color: this.foregroundColor)),
-                new Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    DatePicker.showDatePicker(context,
-                        showTitleActions: true,
-                        minTime: DateTime(2018, 1, 1),
-                        maxTime: DateTime(2118, 1, 1), onChanged: (date) {
-                      _setDate(date);
-                      _setVisibilityOfDateTextField(true);
-                    }, onConfirm: (date) {
-                      _setDate(date);
-                      _setVisibilityOfDateTextField(true);
-                    }, currentTime: DateTime.now(), locale: LocaleType.pt);
-                  },
-                  child: TextFormField(
-                      controller: _dateEditing,
-                      readOnly: true,
-                      enabled: false,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                    new Expanded(
+                      child: TextFormField(
+                        readOnly: true,
+                        initialValue: args['name'].toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: this.foregroundColor),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          border: InputBorder.none,
+                          labelText: 'Nome',
                           labelStyle: TextStyle(color: Colors.white),
-                          hintText: 'Formato: xx/xx/xxxx',
-                          labelText: 'Data que deseja saber *',
-                          border: InputBorder.none),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Selecione a data no botão acima ou informe com xx/xx/xxxx';
-                        }
-                        return null;
-                      }),
-                )),
-              ],
-            ),
-          ),
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 30.0),
-            alignment: Alignment.center,
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  child: new FlatButton(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 20.0),
-                    color: this.highlightColor,
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        // Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processando dados...')));
-                        _verifyIfHeIsGoingToWork();
-                      }
-                    },
-                    child: Text(
-                      "Verificar",
-                      style: TextStyle(color: this.foregroundColor),
+                          hintStyle: TextStyle(color: this.foregroundColor),
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 0.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: this.foregroundColor,
+                        width: 0.5,
+                        style: BorderStyle.solid),
                   ),
                 ),
-              ],
-            ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Icon(
+                        Icons.work,
+                        color: this.foregroundColor,
+                      ),
+                    ),
+                    new Expanded(
+                        child: new Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: this.highlightColor,
+                      ),
+                      child: DropdownButtonFormField(
+                        isExpanded: true,
+                        style: TextStyle(color: this.foregroundColor),
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                                left: 15.0, top: 10.0, bottom: 10.0),
+                            hintText: 'Você está trabalhando hoje?',
+                            hintStyle: TextStyle(color: Colors.white),
+                            labelText: 'Trabalhando hoje? *',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: InputBorder.none),
+                        value: _selectedOption != null
+                            ? _selectedOption
+                            : _options[0],
+                        validator: (String value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Informe se está ou não trabalhando hoje!';
+                          }
+                          return null;
+                        },
+                        items: _options
+                            .map((option) => DropdownMenuItem(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: new Text(
+                                      option,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  value: option,
+                                ))
+                            .toList(),
+                        onChanged: (newValue) =>
+                            setState(() => _selectedOption = newValue),
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: this.foregroundColor,
+                        width: 0.5,
+                        style: BorderStyle.solid),
+                  ),
+                ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Padding(
+                        padding:
+                            EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
+                        child: Icon(Icons.date_range,
+                            color: this.foregroundColor)),
+                    new Expanded(
+                        child: FlatButton(
+                      onPressed: () {
+                        DatePicker.showDatePicker(context,
+                            showTitleActions: true,
+                            minTime: DateTime(2018, 1, 1),
+                            maxTime: DateTime(2118, 1, 1), onChanged: (date) {
+                          _setDate(date);
+                          _setVisibilityOfDateTextField(true);
+                        }, onConfirm: (date) {
+                          _setDate(date);
+                          _setVisibilityOfDateTextField(true);
+                        }, currentTime: DateTime.now(), locale: LocaleType.pt);
+                      },
+                      child: TextFormField(
+                          controller: _dateEditing,
+                          readOnly: true,
+                          enabled: false,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                              labelStyle: TextStyle(color: Colors.white),
+                              hintText: 'Formato: xx/xx/xxxx',
+                              labelText: 'Data que deseja saber *',
+                              border: InputBorder.none),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Selecione a data no botão acima ou informe com xx/xx/xxxx';
+                            }
+                            return null;
+                          }),
+                    )),
+                  ],
+                ),
+              ),
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 30.0),
+                alignment: Alignment.center,
+                child: new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new FlatButton(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 20.0),
+                        color: this.highlightColor,
+                        onPressed: () {
+                          if (showSnackbar)
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('Preencha todos os campos.')));
+                          _verifyIfHeIsGoingToWork();
+                        },
+                        child: Text(
+                          "Verificar",
+                          style: TextStyle(color: this.foregroundColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // new Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+              //   alignment: Alignment.center,
+              //   child: new Row(
+              //     children: <Widget>[
+              //       new Expanded(
+              //         child: new FlatButton(
+              //           padding: const EdgeInsets.symmetric(
+              //               vertical: 20.0, horizontal: 20.0),
+              //           color: Colors.transparent,
+              //           onPressed: () => {},
+              //           child: Text(
+              //             "Esqueceu sua senha?",
+              //             style: TextStyle(
+              //                 color: this.foregroundColor.withOpacity(0.5)),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // new Expanded(
+              //   child: Divider(),
+              // ),
+              // new Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   margin: const EdgeInsets.only(
+              //       left: 40.0, right: 40.0, top: 10.0, bottom: 20.0),
+              //   alignment: Alignment.center,
+              //   child: new Row(
+              //     children: <Widget>[
+              //       new Expanded(
+              //         child: new FlatButton(
+              //           padding: const EdgeInsets.symmetric(
+              //               vertical: 20.0, horizontal: 20.0),
+              //           color: Colors.transparent,
+              //           onPressed: () => {},
+              //           child: Text(
+              //             "Não tem uma conta? Crie uma.",
+              //             style: TextStyle(
+              //                 color: this.foregroundColor.withOpacity(0.5)),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
           ),
-          // new Container(
-          //   width: MediaQuery.of(context).size.width,
-          //   margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          //   alignment: Alignment.center,
-          //   child: new Row(
-          //     children: <Widget>[
-          //       new Expanded(
-          //         child: new FlatButton(
-          //           padding: const EdgeInsets.symmetric(
-          //               vertical: 20.0, horizontal: 20.0),
-          //           color: Colors.transparent,
-          //           onPressed: () => {},
-          //           child: Text(
-          //             "Esqueceu sua senha?",
-          //             style: TextStyle(
-          //                 color: this.foregroundColor.withOpacity(0.5)),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // new Expanded(
-          //   child: Divider(),
-          // ),
-          // new Container(
-          //   width: MediaQuery.of(context).size.width,
-          //   margin: const EdgeInsets.only(
-          //       left: 40.0, right: 40.0, top: 10.0, bottom: 20.0),
-          //   alignment: Alignment.center,
-          //   child: new Row(
-          //     children: <Widget>[
-          //       new Expanded(
-          //         child: new FlatButton(
-          //           padding: const EdgeInsets.symmetric(
-          //               vertical: 20.0, horizontal: 20.0),
-          //           color: Colors.transparent,
-          //           onPressed: () => {},
-          //           child: Text(
-          //             "Não tem uma conta? Crie uma.",
-          //             style: TextStyle(
-          //                 color: this.foregroundColor.withOpacity(0.5)),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ],
-      ),
-    );
+        ));
   }
 
   // @override

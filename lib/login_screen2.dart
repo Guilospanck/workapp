@@ -153,12 +153,14 @@ class LoginScreen2 extends StatelessWidget {
                 new Expanded(
                   child: TextFormField(
                     controller: _name,
+                    autofocus: true,
                     onChanged: (value) => setTextToLogo(value),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: this.foregroundColor),
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      // hintText: 'jaiansousa@flutter.com',
+                      border: InputBorder
+                          .none, // hintText: 'jaiansousa@flutter.com',
+                      hintText: 'Nome de usuário',
                       hintStyle: TextStyle(color: this.foregroundColor),
                     ),
                   ),
@@ -194,8 +196,10 @@ class LoginScreen2 extends StatelessWidget {
                 new Expanded(
                   child: TextFormField(
                     controller: _pass,
+                    autofocus: false,
                     obscureText: true,
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: '*********',
