@@ -9,8 +9,10 @@ class ResultScreenComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xFF444152),
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('Work App'),
+          backgroundColor: Color(0xFF444152),
         ),
         body: args != null
             ? ListView(children: <Widget>[
@@ -41,7 +43,11 @@ class ResultScreenComponent extends StatelessWidget {
                                         height: 400, fit: BoxFit.fill)),
                           ),
                           ListTile(
-                            title: Text(args['result']),
+                            tileColor: Color(0xFF6f6c7d),
+                            title: Text(
+                              args['result'],
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),

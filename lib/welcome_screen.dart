@@ -79,23 +79,21 @@ class _WelcomeFormState extends State<WelcomeForm> {
     return whatTeamIsHe;
   }
 
-  String _formatResponseToShowInResultScreen(
-      DateTime dayHeWantsToKnow, DateTime today, String workingOrNot) {
+  String _formatResponseToShowInResultScreen(DateTime dayHeWantsToKnow,
+      DateTime today, String workingOrNot, String name) {
     var response = "";
     if (dayHeWantsToKnow.isAfter(today)) {
-      response =
-          _name.text + ", você " + workingOrNot + "irá trabalhar nesse dia.";
+      response = name + ", você " + workingOrNot + "irá trabalhar nesse dia.";
     } else if (dayHeWantsToKnow.isAtSameMomentAs(today)) {
-      response =
-          _name.text + ", você " + workingOrNot + "está trabalhando hoje.";
+      response = name + ", você " + workingOrNot + "está trabalhando hoje.";
     } else if (dayHeWantsToKnow.isBefore(today)) {
-      response = _name.text + ", você " + workingOrNot + "trabalhou nesse dia.";
+      response = name + ", você " + workingOrNot + "trabalhou nesse dia.";
     }
 
     return response;
   }
 
-  void _verifyIfHeIsGoingToWork() {
+  void _verifyIfHeIsGoingToWork(String name) {
     if (_dateEditing.text.length != 0) {
       setState(() {
         showSnackbar = false;
@@ -115,12 +113,12 @@ class _WelcomeFormState extends State<WelcomeForm> {
       var response = "";
       bool yesOrNo = false;
       if (teamOfTheDay == whatTeamIsHe) {
-        response =
-            _formatResponseToShowInResultScreen(dayHeWantsToKnow, today, "");
+        response = _formatResponseToShowInResultScreen(
+            dayHeWantsToKnow, today, "", name);
         yesOrNo = true;
       } else {
         response = _formatResponseToShowInResultScreen(
-            dayHeWantsToKnow, today, "não ");
+            dayHeWantsToKnow, today, "não ", name);
         yesOrNo = false;
       }
       _showResultScreen(response, yesOrNo);
@@ -397,7 +395,7 @@ class _WelcomeFormState extends State<WelcomeForm> {
                               duration: Duration(seconds: 2),
                             ));
                           }
-                          _verifyIfHeIsGoingToWork();
+                          _verifyIfHeIsGoingToWork(args['name'].toString());
                         },
                         child: Text(
                           "Verificar",
