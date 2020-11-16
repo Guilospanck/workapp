@@ -7,3 +7,7 @@ You choose the day you want to know, and then it returns if you're going to work
 
 ## Screenshots
 
+![Login Screen](/img/1.jpeg)
+![Register Screen](/img/2.jpeg)
+![Main Screen](/img/3.jpeg)
+![Date Selection](/img/4.jpeg)
